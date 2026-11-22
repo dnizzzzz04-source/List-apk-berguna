@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pusatku - Web by Danish</title>
+    <!-- Import Font Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === BAGIAN CSS === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #ffffff;
+            --text-muted: #b3b3b3;
+            --danger: #ff7675;
+            --primary-color: #a29bfe; /* Warna ungu soft untuk aksen */
+        }
+
+        body {
+            /* Background hitam elegan */
+            background-color: #0b0b0f; 
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        /* Background Animasi Liquid */
+        .bg-blobs {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0b0b0f 0%, #14141a 100%);
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.4;
+            animation: float 15s infinite alternate;
+        }
+        .blob-1 { width: 300px; height: 300px; background: #2d1b69; top: -50px; left: -50px; }
+        .blob-2 { width: 250px; height: 250px; background: #0f3443; bottom: 20%; right: -50px; animation-duration: 18s; }
+        .blob-3 { width: 200px; height: 200px; background: #4a1c2c; bottom: -50px; left: 20%; animation-duration: 12s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 60px) scale(1.2); }
+        }
+
+        /* Liquid Glass Panel Style */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6);
+        }
+
+        /* Header & Navbar */
+        header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            gap: 15px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .menu-btn {
+            width: 45px;
+            height: 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            border: none;
+            outline: none;
+            transition: 0.3s;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+        }
+        .menu-btn:active { transform: scale(0.9); }
+        
+        .bar {
+            width: 20px;
+            height: 3px;
+            background-color: white;
+            border-radius: 2px;
+        }
+
+        .title-bar {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        /* Dropdown Menu */
+        .dropdown {
+            position: absolute;
+            top: 80px;
+            left: 20px;
+            width: 230px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: 0.3s ease;
+            z-index: 20;
+        }
+        .dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .dropdown a {
+            color: var(--text-main);
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: 0.2s;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .dropdown a:last-child { border-bottom: none; }
+        .dropdown a:active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Main Content */
+        main {
+            padding: 0 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease forwards;
+        }
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* === STYLE HALAMAN UTAMA (PUSATKU) === */
+        .hero-container {
+            padding: 10px 5px 30px 5px;
+        }
+        
+        .hero-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .hero-logo {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px rgba(162, 155, 254, 0.5)); /* Efek glow pada logo */
+        }
+        
+        .hero-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+        
+        .hero-greeting {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+        
+        .hero-big-text {
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        
+        .hero-big-text span {
+            font-style: italic;
+            color: var(--primary-color);
+        }
+        
+        .hero-subtext {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Video Container (Tentang) */
+        .video-container {
+            width: 100%;
+            aspect-ratio: 3/4;
+            margin-top: 15px;
+            margin-bottom: 25px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #000;
+        }
+
+        /* Group Styling */
+        .group {
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .group h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 10px;
+        }
+
+        /* Item List */
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .item-info h4 {
+            font-weight: 400;
+            font-size: 1rem;
+        }
+
+        /* Tombol Install */
+        .btn-install {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid var(--glass-border);
+            transition: 0.3s;
+        }
+        .btn-install:active {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(255,255,255,0.3);
+            transform: scale(0.95);
+        }
+
+        /* Warning Style */
+        .warning {
+            background: rgba(255, 118, 117, 0.15);
+            border-left: 4px solid var(--danger);
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            color: #ffcccc;
+            line-height: 1.5;
+        }
+
+        /* Tentang Page */
+        .tentang-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            margin-top: 10px;
+        }
+        .btn-back {
+            padding: 10px 20px;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+        }
+        .btn-back:active { transform: scale(0.95); }
+        .tentang-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .footer-text {
+            margin-top: 20px;
+            color: white;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            text-align: left;
+            padding-left: 10px;
+            opacity: 0.9;
+        }
+
+        /* === STYLE UNTUK FOLLOW AKUN === */
+        .social-section {
+            margin-top: 35px;
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-bottom: 20px;
+        }
+        .social-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+        .social-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 15px;
+            border-radius: 24px; 
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.3s;
+        }
+        .social-card:active {
+            transform: scale(0.98);
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .avatar {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(162, 155, 254, 0.4); 
+        }
+        
+        .username {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-follow {
+            background: linear-gradient(135deg, #8c7ae6, #a29bfe);
+            color: white;
+            text-decoration: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.5);
+        }
+        .btn-follow:active {
+            transform: scale(0.95);
+            box-shadow: 0 2px 10px rgba(108, 92, 231, 0.7);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Animasi Liquid -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Navbar -->
+    <header>
+        <button class="menu-btn" id="menuBtn">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </button>
+        <div class="title-bar glass-panel">By danish</div>
+    </header>
+
+    <!-- Dropdown Menu -->
+    <nav class="dropdown glass-panel" id="dropdownMenu">
+        <a href="#" onclick="showPage('page-utama')">utama</a>
+        <a href="#" onclick="showPage('page-root')">download bahan2 root</a>
+        <a href="#" onclick="showPage('page-music')">download apk music</a>
+        <a href="#" onclick="showPage('page-tentang')">Tentang</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- HALAMAN 0: UTAMA (PUSATKU) - Tampil Pertama -->
+        <section id="page-utama" class="page active">
+            <div class="hero-container">
+                <div class="hero-header">
+                    <img src="https://files.catbox.moe/4kr3b0.png" alt="Pusatku Logo" class="hero-logo">
+                    <h1 class="hero-title">Pusatku</h1>
+                </div>
+                
+                <p class="hero-greeting">Halo selamat datang</p>
+                <h2 class="hero-big-text">
+                    Web Pusatku untuk <br><span>download berbagai apk</span> bergunaa
+                </h2>
+                <p class="hero-subtext">
+                    Pusatku adalah pusat download aplikasi alternatif dll, selamat menikmati!
+                </p>
+            </div>
+        </section>
+
+        <!-- HALAMAN 1: Download Bahan2 Root -->
+        <section id="page-root" class="page">
+            <div class="group glass-panel">
+                <h3>Grup 1: APK untuk Superuser</h3>
+                <div class="item">
+                    <div class="item-info"><h4>Magisk</h4></div>
+                    <a href="https://github.com/topjohnwu/Magisk/releases" target="_blank" class="btn-install">Install</a>
+                </div>
+                <div class="item">
+                    <div class="item-info"><h4>KernelSU</h4></div>
+                    <a href="https://github.com/tiann/KernelSU/releases" target="_blank" class="btn-install">Install</a>
+                </div>
+                <div class="item">
+                    <div class="item-info"><h4>Kernel SU Next</h4></div>
+                    <a href="https://github.com/KernelSU-Next/KernelSU-Next/releases" target="_blank" class="btn-install">Install</a>
+                </div>
+            </div>
+
+            <div class="group glass-panel">
+                <h3>Grup 2: Temproot</h3>
+                <div class="warning">
+                    ⚠️ Peringatan! Resiko ditanggung pengguna jika terjadi masalah kami tidak menanggungnya.
+                </div>
+                <div class="item">
+                    <div class="item-info"><h4>Ghostlock</h4></div>
+                    <a href="https://github.com/YuKongA/ghostlock-app/releases" target="_blank" class="btn-install">Install</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 2: Download APK Music -->
+        <section id="page-music" class="page">
+            <div class="group glass-panel">
+                <h3>Grup 1: Alternatif Spotify No Iklan</h3>
+                <div class="item">
+                    <div class="item-info"><h4>Bitchord</h4></div>
+                    <a href="https://github.com/kushagrasinghx/BitChord/releases" target="_blank" class="btn-install">Install</a>
+                </div>
+                <div class="item">
+                    <div class="item-info"><h4>Auralys</h4></div>
+                    <a href="https://auralys.my.id/" target="_blank" class="btn-install">Install</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- HALAMAN 3: Tentang -->
+        <section id="page-tentang" class="page">
+            <div class="tentang-header">
+                <button class="btn-back" onclick="showPage('page-utama')">
+                    <span>&larr;</span> tombol kembali
+                </button>
+                <span class="tentang-title">Tentang</span>
+            </div>
+            
+            <!-- Video Otomatis Putar -->
+            <div class="video-container glass-panel">
+                <video src="https://files.catbox.moe/wa1q6r.mp4" autoplay muted loop controls playsinline></video>
+            </div>
+
+            <!-- Teks Footer -->
+            <div class="footer-text">
+                <p>Web by danish</p>
+                <p>Deploy by netfliy</p>
+            </div>
+
+            <!-- Bagian Follow Akunkuu -->
+            <div class="social-section">
+                <h3 class="social-title">Follow akunkuu</h3>
+
+                <!-- Kartu Sosial 1 (OhMyNiz) -->
+                <div class="social-card">
+                    <div class="profile-info">
+                        <img src="https://files.catbox.moe/9alz40.webp" alt="OhMyNiz" class="avatar">
+                        <span class="username">OhMyNiz</span>
+                    </div>
+                    <a href="https://tiktok.com/@dnizzz6767" target="_blank" class="btn-follow">Follow</a>
+                </div>
+
+                <!-- Kartu Sosial 2 (Dnizz Zzz) -->
+                <div class="social-card">
+                    <div class="profile-info">
+                        <img src="https://files.catbox.moe/9alz40.webp" alt="Dnizz Zzz" class="avatar">
+                        <span class="username">Dnizz Zzz</span>
+                    </div>
+                    <a href="https://tiktok.com/@dnizz.zzz0" target="_blank" class="btn-follow">Follow</a>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script>
+        /* === BAGIAN JAVASCRIPT === */
+        const menuBtn = document.getElementById('menuBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const pages = document.querySelectorAll('.page');
+
+        // Buka/Tutup Menu titik tiga
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+        });
+
+        // Tutup menu jika klik di luar
+        document.addEventListener('click', (e) => {
+            if (!dropdownMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+
+        /**
+         * @param {string} pageId - ID dari halaman yang akan ditampilkan
+         */
+        function showPage(pageId) {
+            // Sembunyikan semua halaman
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Tampilkan halaman yang dituju
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // Tutup menu
+            dropdownMenu.classList.remove('show');
+            
+            // Scroll ke atas
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // Logika Video: Hanya mainkan video jika berada di halaman 'tentang'
+            const videoTentang = document.querySelector('#page-tentang video');
+            
+            if (pageId === 'page-tentang') {
+                if (videoTentang) {
+                    videoTentang.play().catch(/** @param {any} error */ (error) => {
+                        console.log("Autoplay dicegah browser:", error);
+                    });
+                }
+            } else {
+                // Jika pindah halaman selain tentang, matikan videonya
+                if (videoTentang) {
+                    videoTentang.pause();
+                    videoTentang.currentTime = 0; // Reset durasi
+                }
+            }
+        }
+    </script>
+</body>
+</html>
